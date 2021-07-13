@@ -1,19 +1,23 @@
+DROP DATABASE IF EXISTS employeedatabase;
+CREATE DATABASE employeedatabase;
+USE employeedatabase;
+
 CREATE TABLE department (
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(30) NOT NULL,
-)
+    name VARCHAR(30) NOT NULL
+);
 
 CREATE TABLE role (
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(30) NOT NULL,
     salary DECIMAL(10,2),
-    FOREIGN KEY (department_id) REFERENCES department(id) ON DELETE SET NULL
-)
+    department_id INTEGER NOT NUll
+);
 
 CREATE TABLE employee (
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
-    FOREIN KEY (role_id) REFERENCES role(id) ON DELETE SET NULL,
-    manager_id INTERGER,
-)
+    role_id INTEGER NOT NULL,
+    manager_id INTEGER
+);
