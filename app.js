@@ -2,7 +2,6 @@ const express = require('express')
 const PORT = process.env.PORT || 3001;
 const db = require('./db/Connection')
 const inq = require('inquirer');
-const { allowedNodeEnvironmentFlags } = require('process');
 const Connection = require('./db/Connection');
 const router = require('./routes/employeeRoutes');
 require("console.table");
@@ -28,33 +27,93 @@ const prompt = () => {
             'update employee role',
             'end'
         ]
-    }).then(function(option){
-        switch (option) {
+    }).then(function({options}){
+        switch (options) {
             case "view all departments":
                 db.query(`SELECT * FROM department`,(err,results)=> {
                     if(err){
                         console.log(err);
                     }
-                    console.log(results);
-                })
-                prompt();
+                    console.table(results);
+                }).then(prompt())
+                break;
             case "view all roles":
-                viewroles();
+                db.query(`SELECT * FROM role`, (err, results)=> {
+                    if(err){
+                        console.log(err);
+                    }
+                    console.table(results)
+                }).then(prompt())
                 break;
             case "view all employees":
-                viewEmployees();
+                db.query(`SELECT * FROM employee`, (err, results)=> {
+                    if(err){
+                        console.log(err)
+                    }
+                    console.table(results)
+                }).then(prompt())
                 break;
             case "add a department":
-                addDepartment();
+                inq.prompt({
+                    type: 'input',
+                    name: 'department_name',
+                    message: 'Enter new department name'
+                }).then(
+                    db.query(`INSERT INTO department (department_name)`),
+                    console.log('Department added')
+                ).then(prompt())
                 break;
             case "add a role":
-                addrole();
+                inq.prompt({
+                    type: 'input',
+                    name: 'role',
+                    message: 'Name of new role'
+                },
+                {
+                    type: 'list',
+                    name: 'role_location',
+                    message: 'Select which department new role belongs to',
+                    choices: ['Finance','Sales','Legal','Management']
+                }).then(
+                    db.query(`INSERT INTO roles (role)`),
+                    console.log('New role added')
+                ).then(prompt())
                 break;
             case "add an employee":
-                addEmployee();
+                inq.prompt({
+                    type: 'input',
+                    name: 'first_name',
+                    message: 'Enter employee first name'
+                },
+                {
+                    type: 'input',
+                    name: 'last_name',
+                    message: 'Enter employee last name'
+                },
+                {
+                    type: 'list',
+                    name: 'role',
+                    message: 'Choose employee role',
+                    choices: [
+                        'Financial Advisor',
+                        'Sales Representitive',
+                        'Lawyer',
+                        'Manager'
+                    ]
+                }).then(
+                    db.query(`INSERT INTO employee (first_name, last_name, role)`),
+                    console.log('Employee added')
+                ).then(prompt())
+                
                 break;
             case "update employee role":
-                updateRole();
+               const params = [req.body.role_id, req.params.id];
+                db.query(`UPDATE employee SET role_id =? WHERE id=?`,params,(err,results)=>{
+                    if(err) {
+                        console.log(err)
+                    }
+                    console.table(results)
+                })
                 break;
             case "end":
                 connection.end();
