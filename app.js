@@ -58,10 +58,14 @@ const prompt = () => {
                     type: 'input',
                     name: 'department_name',
                     message: 'Enter new department name'
-                }).then(
-                    db.query(`INSERT INTO department (department_name)`),
-                    console.log('Department added')
-                ).then(prompt())
+                }).then(({name})=> {
+                    db.query(`INSERT INTO depatment SET ?`, {
+                        name: name
+                    }, (err)=> {
+                        if(err) throw err;
+                        console.log("Department successfully added");
+                    })
+                }).then(prompt())
                 break;
             case "add a role":
                 inq.prompt({
