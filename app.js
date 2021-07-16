@@ -1,10 +1,17 @@
 const express = require('express')
 const PORT = process.env.PORT || 3001;
-const departmentRoutes = require('./routes/departmentRoutes')
-const db = require('./db/connection')
+const db = require('./db/Connection')
 const inq = require('inquirer');
 const { allowedNodeEnvironmentFlags } = require('process');
-const Connection = require('mysql2/typings/mysql/lib/Connection');
+const Connection = require('./db/Connection');
+const router = require('./routes/employeeRoutes');
+require("console.table");
+router.use(express.urlencoded({extended:false}))
+router.use(express.json());
+
+router.use(require('./routes/departmentRoutes'))
+router.use(require('./routes/employeeRoutes'))
+router.use(require('./routes/roleRoutes'))
 
 const prompt = () => {
     return inq.prompt ({
@@ -24,8 +31,13 @@ const prompt = () => {
     }).then(function(option){
         switch (option) {
             case "view all departments":
-                viewDepartments();
-                break;
+                db.query(`SELECT * FROM department`,(err,results)=> {
+                    if(err){
+                        console.log(err);
+                    }
+                    console.log(results);
+                })
+                prompt();
             case "view all roles":
                 viewroles();
                 break;

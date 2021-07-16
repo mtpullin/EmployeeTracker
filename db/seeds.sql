@@ -13,7 +13,8 @@ VALUES
 ('Manager',45000,4,4);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id, id)
-('Jimmy', 'Page', 4, null, 1),
+VALUES
+('Jimmy', 'Page', 4, NULL, 1),
 ('Dave', 'Grohl', 1, 4, 2),
 ('Dave', 'Matthews', 2, 4, 3),
 ('Chris', 'Cornell', 3, 4, 4);

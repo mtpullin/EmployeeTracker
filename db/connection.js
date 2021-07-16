@@ -1,5 +1,4 @@
 const mysql= require('mysql2');
-const secret = require('hide-secrets')
 require('dotenv').config()
 
 const db = mysql.createConnection(
