@@ -61,25 +61,31 @@ const prompt = () => {
                 })
                 break;
             case "add a role":
-                inq.prompt({
+                inq.prompt([
+                    {
                     type: 'input',
                     name: 'role',
                     message: 'Name of new role'
                 },
                 {
+                    type: 'input',
+                    name: 'salary',
+                    message: 'input salary'
+                },
+                {
                     type: 'list',
                     name: 'department_id',
                     message: 'Select which department new role belongs to',
-                    choices: ['Finance','Sales','Legal','Management']
-                }).then(({role_name, department_id})=> {
-                    db.promise().query(`INSERT INTO role SET (?,?)`,{title: role_name, department_id: department_id}).then( ([rows,fields])=>{
+                    choices: [1, 2, 3, 4]
+                }]).then(({role, salary, department_id})=> {
+                    db.promise().query(`INSERT INTO role SET ?`,{title:role, salary:Number(salary), department_id: department_id}).then( ([rows,fields])=>{
                         console.log(rows)
                     })
                     .catch(console.log).then(prompt())
                 })
                 break;
             case "add an employee":
-                inq.prompt({
+                inq.prompt([{
                     type: 'input',
                     name: 'first_name',
                     message: 'Enter employee first name'
@@ -93,31 +99,36 @@ const prompt = () => {
                     type: 'list',
                     name: 'role',
                     message: 'Choose employee role',
-                    choices: [
-                        'Financial Advisor',
-                        'Sales Representitive',
-                        'Lawyer',
-                        'Manager'
-                    ]
-                }).then(({first_name})=> {
-                    db.promise().query(`INSERT INTO department SET ?`,{name: first_name}).then( ([rows,fields])=>{
+                    choices: [1,2,3,4]
+                    
+
+                    
+                },
+                {
+                    type: 'list',
+                    name: 'manager',
+                    message: 'choose manager',
+                    choices: ['jimmy page']
+                }
+            ]).then(({first_name, last_name, role, manager})=> {
+                    db.promise().query(`INSERT INTO department SET ?`,{first_name: first_name, last_name: last_name, role: role, manager: manager }).then( ([rows,fields])=>{
                         console.log(rows)
                     })
                     .catch(console.log).then(prompt())
                 })
                  break;
-            // case "update employee role":
-            //    const params = [req.body.role_id, req.params.id];
-            //     db.query(`UPDATE employee SET role_id =? WHERE id=?`,params,(err,results)=>{
-            //         if(err) {
-            //             console.log(err)
-            //         }
-            //         console.table(results)
-            //     })
-            //     break;
-            // case "end":
-            //     connection.end();
-            //     break
+            case "update employee role":
+               const params = [req.body.role_id, req.params.id];
+                db.query(`UPDATE employee SET role_id =? WHERE id=?`,params,(err,results)=>{
+                    if(err) {
+                        console.log(err)
+                    }
+                    console.table(results)
+                })
+                break;
+            case "end":
+                Connection.end();
+                break
         }
     }
     )}
