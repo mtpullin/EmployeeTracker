@@ -58,70 +58,70 @@ const prompt = () => {
                     type: 'input',
                     name: 'department_name',
                     message: 'Enter new department name'
-                }).then(({name})=> {
+                }).then(({department_name})=> {
                     db.query(`INSERT INTO depatment SET ?`, {
-                        name: name
+                        name: department_name
                     }, (err)=> {
                         if(err) throw err;
                         console.log("Department successfully added");
                     })
                 }).then(prompt())
                 break;
-            case "add a role":
-                inq.prompt({
-                    type: 'input',
-                    name: 'role',
-                    message: 'Name of new role'
-                },
-                {
-                    type: 'list',
-                    name: 'role_location',
-                    message: 'Select which department new role belongs to',
-                    choices: ['Finance','Sales','Legal','Management']
-                }).then(
-                    db.query(`INSERT INTO roles (role)`),
-                    console.log('New role added')
-                ).then(prompt())
-                break;
-            case "add an employee":
-                inq.prompt({
-                    type: 'input',
-                    name: 'first_name',
-                    message: 'Enter employee first name'
-                },
-                {
-                    type: 'input',
-                    name: 'last_name',
-                    message: 'Enter employee last name'
-                },
-                {
-                    type: 'list',
-                    name: 'role',
-                    message: 'Choose employee role',
-                    choices: [
-                        'Financial Advisor',
-                        'Sales Representitive',
-                        'Lawyer',
-                        'Manager'
-                    ]
-                }).then(
-                    db.query(`INSERT INTO employee (first_name, last_name, role)`),
-                    console.log('Employee added')
-                ).then(prompt())
+            // case "add a role":
+            //     inq.prompt({
+            //         type: 'input',
+            //         name: 'role',
+            //         message: 'Name of new role'
+            //     },
+            //     {
+            //         type: 'list',
+            //         name: 'role_location',
+            //         message: 'Select which department new role belongs to',
+            //         choices: ['Finance','Sales','Legal','Management']
+            //     }).then(
+            //         db.query(`INSERT INTO roles (role)`),
+            //         console.log('New role added')
+            //     ).then(prompt())
+            //     break;
+            // case "add an employee":
+            //     inq.prompt({
+            //         type: 'input',
+            //         name: 'first_name',
+            //         message: 'Enter employee first name'
+            //     },
+            //     {
+            //         type: 'input',
+            //         name: 'last_name',
+            //         message: 'Enter employee last name'
+            //     },
+            //     {
+            //         type: 'list',
+            //         name: 'role',
+            //         message: 'Choose employee role',
+            //         choices: [
+            //             'Financial Advisor',
+            //             'Sales Representitive',
+            //             'Lawyer',
+            //             'Manager'
+            //         ]
+            //     }).then(
+            //         db.query(`INSERT INTO employee (first_name, last_name, role)`),
+            //         console.log('Employee added')
+            //     ).then(prompt())
                 
-                break;
-            case "update employee role":
-               const params = [req.body.role_id, req.params.id];
-                db.query(`UPDATE employee SET role_id =? WHERE id=?`,params,(err,results)=>{
-                    if(err) {
-                        console.log(err)
-                    }
-                    console.table(results)
-                })
-                break;
-            case "end":
-                connection.end();
-                break
+            //     break;
+            // case "update employee role":
+            //    const params = [req.body.role_id, req.params.id];
+            //     db.query(`UPDATE employee SET role_id =? WHERE id=?`,params,(err,results)=>{
+            //         if(err) {
+            //             console.log(err)
+            //         }
+            //         console.table(results)
+            //     })
+            //     break;
+            // case "end":
+            //     connection.end();
+            //     break
         }
     }
     )}
