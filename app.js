@@ -118,16 +118,26 @@ const prompt = () => {
                 })
                  break;
             case "update employee role":
-               const params = [req.body.role_id, req.params.id];
-                db.query(`UPDATE employee SET role_id =? WHERE id=?`,params,(err,results)=>{
-                    if(err) {
-                        console.log(err)
-                    }
-                    console.table(results)
+                inq.prompt([{
+                    type: 'list',
+                    name: 'id',
+                    message: 'please selesct employee to update their role',
+                    choices: [1,2,3,4,]
+                },
+                {
+                    type: 'list',
+                    name: 'role_id',
+                    message: 'Choose new role',
+                    choices: [1,2,3,4]
+                }]).then(({id ,role_id })=> {
+                    db.promise().query(`UPDATE employee SET ?`,{ id: id, role_id: role_id}).then(([rows,fields])=>{
+                        console.log(rows)
+                    })
+                    .catch(console.log).then(prompt())
                 })
                 break;
             case "end":
-                Connection.end();
+                onnection.end();
                 break
         }
     }
