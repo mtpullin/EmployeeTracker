@@ -4,7 +4,6 @@ const db = require('./db/Connection')
 const inq = require('inquirer');
 const Connection = require('./db/Connection');
 const router = require('./routes/employeeRoutes');
-const mysql = require('mysql2/promise')
 require("console.table");
 router.use(express.urlencoded({extended:false}))
 router.use(express.json());
@@ -60,14 +59,10 @@ const prompt = () => {
                     name: 'department_name',
                     message: 'Enter new department name'
                 }).then(({department_name})=> {
-                    db.query(`INSERT INTO depatment SET ?`,{name: department_name}, function(err, results) {
-                        
-                        console.log("Department successfully added");
-                        console.table(results)
-                    }, (err)=> {
-                        if(err) throw err;
-                        
+                    db.promise().query(`INSERT INTO department SET ?`,{name: department_name}).then( ([rows,fields])=>{
+                        console.log(rows)
                     })
+                    .catch(console.log)
                     
                 }).then(prompt())
                 break;
